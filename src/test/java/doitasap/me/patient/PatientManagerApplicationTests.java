@@ -1,4 +1,4 @@
-package doitasap.me.patientmanager;
+package doitasap.me.patient;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

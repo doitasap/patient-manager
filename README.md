@@ -18,8 +18,9 @@
      - Project, Language, 버전 등을 자유롭게 선택하신 후 Packaging 을 `Jar`로 선택해주세요.
      - `Spring Web`, `Spring Data JPA`, `H2 Databse` 를 Dependencies 에 추가해주세요.
      - GENERATE 를 클릭! 한 후 IntelliJ, Eclipse 등 원하는 IDE 로 해당 Project 를 열고 무사히 실행하면 성공!~~
-> 2. H2 설정하기
-    - application.properties(혹은 yml) 에 설정을 추가하여, h2-console을 활성화하고 spring 의 datasource 를 설정해주세요. (이름은 자유롭게!)
+>
+> ~~2. H2 설정하기
+    - application.properties(혹은 yml) 에 설정을 추가하여, h2-console을 활성화하고 spring 의 datasource 를 설정해주세요. (이름은 자유롭게!)~~
 > 3. Entity 클래스 및 Repository 생성
     - 위 첨부된 기획서와 ERD를 참고하여, javax.persistence.Entity 어노테이션을 이용하여 Entity class 3개 `Hospital` (병원), `Patient` (환자), `Visit` (환자방문) 을 정의해주세요.
         - ERD를 살펴보시고 @OneToMany, @ManyToOne 등의 관계를 적절히 설정해주세요.
