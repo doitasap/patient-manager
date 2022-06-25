@@ -2,17 +2,17 @@
 ### 에이치디정션 백엔드 개발자 채용 온라인 과제
 
 
-> ##개발 환경
+> ## 개발 환경
 >```
 >JAVA : openJDK 11
 >DB : H2 Database
 >```
 
-> ##프로젝트 빌드
+> ## 프로젝트 빌드
 
-> ##폴더 구조 
+> ## 폴더 구조 
 
-> ##요구사항
+> ## 요구사항
 > ~~1. 웹 프로젝트 구성
      - [https://start.spring.io](https://start.spring.io) 에서 프로젝트를 생성해주세요.
      - Project, Language, 버전 등을 자유롭게 선택하신 후 Packaging 을 `Jar`로 선택해주세요.
@@ -21,12 +21,14 @@
 >
 > ~~2. H2 설정하기
     - application.properties(혹은 yml) 에 설정을 추가하여, h2-console을 활성화하고 spring 의 datasource 를 설정해주세요. (이름은 자유롭게!)~~
-> 3. Entity 클래스 및 Repository 생성
+>
+> ~~3. Entity 클래스 및 Repository 생성
     - 위 첨부된 기획서와 ERD를 참고하여, javax.persistence.Entity 어노테이션을 이용하여 Entity class 3개 `Hospital` (병원), `Patient` (환자), `Visit` (환자방문) 을 정의해주세요.
         - ERD를 살펴보시고 @OneToMany, @ManyToOne 등의 관계를 적절히 설정해주세요.
         - (옵션) API 구현중 추가로 필요한 컬럼이 있다면 자유롭게 추가해주세요.
         - (옵션) `코드`, `코드그룹`Entity 는 기획서와 ERD를 참고하셔서 적절히 구현해주세요! 코드 관련 테이블은 필요 데이터도 함께 드렸어요.
-    - `JpaRepository` 를 상속받아서 `PatientRepository`와 `VisitRepository` 를 생성해주세요.
+    - `JpaRepository` 를 상속받아서 `PatientRepository`와 `VisitRepository` 를 생성해주세요.~~
+>	
 > 4. 기본 CRUD API 구현
     - `VisitController` 와 `PatientController` 를 생성하여 기본적인 CRUD API를 생성해주세요.
     - endpoint 설계는 RESTful 혹은 혹은 GraphQL로 해주세요.
