@@ -1,5 +1,7 @@
 package doitasap.me.patient.domain;
 
+import doitasap.me.patient.dto.HospitalDto;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -12,6 +14,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "pm_hospital")
 @NoArgsConstructor
+@Getter
 @ToString
 public class Hospital {
     @Id @GeneratedValue
@@ -27,5 +30,12 @@ public class Hospital {
         this.hospitalName = hospitalName;
         this.nursingInstitutionNum = nursingInstitutionNum;
         this.ownerName = ownerName;
+    }
+
+    public Hospital(HospitalDto dto) {
+        this.hospitalName = dto.getHospitalName();
+        this.nursingInstitutionNum = dto.getNursingInstitutionNum();
+        this.ownerName = dto.getOwnerName();
+
     }
 }

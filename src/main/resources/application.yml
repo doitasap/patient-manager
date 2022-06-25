@@ -4,7 +4,7 @@ spring:
       enabled: true
 
   datasource:
-    url: jdbc:h2:tcp://localhost/~/patient
+    url: jdbc:h2:tcp://localhost/~/patient;MODE=MYSQL
     driver-class-name: org.h2.Driver
     username: sa
     password:
@@ -19,3 +19,6 @@ spring:
         physical_naming_strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
         implicit_naming_strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
     defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
