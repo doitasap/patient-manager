@@ -28,6 +28,11 @@ public class PatientService {
                     .filter(p -> p.getHospital().longValue() == criterion.getSearchHospitalId().longValue())
                     .collect(Collectors.toList());
         }
+        if(Objects.nonNull(criterion.getSearchPatientName())){
+            list = list.stream()
+                    .filter(p -> p.getPatientName().contains(criterion.getSearchPatientName()))
+                    .collect(Collectors.toList());
+        }
         return list;
     }
 

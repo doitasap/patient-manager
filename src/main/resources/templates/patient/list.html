@@ -2,7 +2,7 @@
 
 <body>
 <div class="d-flex">
-    <div class="flex-grow-1"><h1 th:text="|환자 검색|">search</h1></div>
+    <div class="flex-grow-1"><h1 th:text="|[${session.hospitalName}] 환자 검색|">search</h1></div>
     <div>
         <form action="/searchAll">
             <div class="d-flex align-items-center">

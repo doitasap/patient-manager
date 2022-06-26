@@ -9,5 +9,6 @@ import lombok.Data;
 
 @Data
 public class PatientCriterion {
-    public Long searchHospitalId;
+    private Long searchHospitalId;
+    private String searchPatientName;
 }

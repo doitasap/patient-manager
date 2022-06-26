@@ -1,11 +1,30 @@
 <html xmlns:th="https://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'insertForm')}">
 
 <body>
-<h1 th:text="|방문 등록|">enroll</h1>
+<h1 th:text="|[${session.hospitalName}] 방문 등록|">enroll</h1>
 <div class="d-flex justify-content-center pt-5">
-    <form action="../patient/detail.html" th:action th:object="${patient}" method="post">
+    <form id="insertForm" action="/visit" th:object="${visit}" method="post" style="width: 500px;">
+        <div class="d-flex align-items-center">
+            <span style="width:150px;"><label for="hospital">병원</label></span>
+            <select class="form-select" th:name="hospital" id="hospital" disabled onchange="$()">
+                <th:block th:each="item : ${hospitals}">
+                    <option th:value="${item.hospitalId}" th:text="${item.hospitalName}" th:selected="${item.hospitalId} == ${session.hospitalId}"></option>
+                </th:block>
+            </select>
+        </div>
+        <div class="d-flex align-items-center">
+            <div class="d-flex flex-row flex-grow-1">
+                    <span style="width:150px;"><label for="patientName">환자명</label></span>
+                    <input type="text" id="patientName" th:field="*{patient}" class="form-control" placeholder="이름을 입력하세요" onkeyup="searchPatient()">
+            </div>
+        </div>
+
+        <th:block th:if="${patientList.size() > 0}">
+            <div>선택창이 나올거에요</div>
+        </th:block>
     </form>
 </div>
 </body>
+
 
 </html>

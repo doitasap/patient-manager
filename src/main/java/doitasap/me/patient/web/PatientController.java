@@ -45,6 +45,9 @@ public class PatientController {
                 criterion.getSearchHospitalId() : Objects.nonNull(session.getAttribute("hospitalId")) ?
                 (Long.parseLong(String.valueOf(session.getAttribute("hospitalId")))) : hospitals.get(0).getHospitalId();
         session.setAttribute("hospitalId", hospitalId);
+        session.setAttribute("hospitalName", Objects.requireNonNull(hospitals.stream()
+                .filter(h -> h.getHospitalId().longValue() == hospitalId)
+                .findFirst().orElse(null)).getHospitalName());
         model.addAttribute("selectHospital", hospitalId);
         return "patient/list";
     }
@@ -93,5 +96,4 @@ public class PatientController {
         log.info("환자 삭제..");
         patientService.delete(patientId);
     }
-
 }

@@ -1,16 +1,17 @@
 <html xmlns:th="https://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'insertForm')}">
 
 <body>
-<h1 th:text="|환자 등록 - ${session.hospitalId}|">enroll</h1>
+<h1 th:text="|[${session.hospitalName}] 환자 등록|">enroll</h1>
 <div class="d-flex justify-content-center pt-5">
     <form id="insertForm" action="/patient" th:object="${patient}" method="post" style="width: 500px;">
         <div class="d-flex align-items-center">
             <span style="width:150px;"><label for="hospital">병원</label></span>
-            <select class="form-select" th:name="hospital" id="hospital">
+            <select class="form-select" id="hospitalTemp" disabled>
                 <th:block th:each="item : ${hospitals}">
                     <option th:value="${item.hospitalId}" th:text="${item.hospitalName}" th:selected="${item.hospitalId} == ${session.hospitalId}"></option>
                 </th:block>
             </select>
+            <input type="hidden" name="hospital"/>
         </div>
         <div class="d-flex align-items-center">
             <span style="width:150px;"><label for="patientName">환자명</label></span>
@@ -44,7 +45,8 @@
 </div>
 <script th:inline="javascript">
     function insert(){
-        console.log('insert', $('#hospitalId').val());
+        $('input[name=hospital]').val($('#hospitalTemp').val())
+        console.log($('input[name=hospital]').val())
         if(validationCheck()){
             $('#insertForm').submit();
         }
