@@ -105,9 +105,11 @@
                         </a>
                     </th:block>
                 </li>
-                <li th:each="page: ${#numbers.sequence(startPage, endPage)}" th:classappend="${page == pageNumber + 1} ? 'active'" class="page-item">
-                    <a th:text="${page}" class="page-link" th:onclick="pageMove([[${page}]])"></a>
-                </li>
+                <th:block th:if="${totalPages} != 0">
+                    <li th:each="page: ${#numbers.sequence(startPage, endPage)}" th:classappend="${page == pageNumber + 1} ? 'active'" class="page-item">
+                        <a th:text="${page}" class="page-link" th:onclick="pageMove([[${page}]])"></a>
+                    </li>
+                </th:block>
                 <li th:classappend="${list.last} ? 'disabled'" class="page-item">
                     <th:block th:if="${list.last}">
                         <a class="page-link" th:href="'#'" aria-label="Next">
