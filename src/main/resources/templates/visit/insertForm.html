@@ -1,0 +1,11 @@
+<html xmlns:th="https://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'insertForm')}">
+
+<body>
+<h1 th:text="|방문 등록|">enroll</h1>
+<div class="d-flex justify-content-center pt-5">
+    <form action="../patient/detail.html" th:action th:object="${patient}" method="post">
+    </form>
+</div>
+</body>
+
+</html>

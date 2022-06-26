@@ -1,0 +1,59 @@
+<html xmlns:th="https://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'insertForm')}">
+
+<body>
+<h1 th:text="|환자 등록 - ${session.hospitalId}|">enroll</h1>
+<div class="d-flex justify-content-center pt-5">
+    <form id="insertForm" action="/patient" th:object="${patient}" method="post" style="width: 500px;">
+        <div class="d-flex align-items-center">
+            <span style="width:150px;"><label for="hospital">병원</label></span>
+            <select class="form-select" th:name="hospital" id="hospital">
+                <th:block th:each="item : ${hospitals}">
+                    <option th:value="${item.hospitalId}" th:text="${item.hospitalName}" th:selected="${item.hospitalId} == ${session.hospitalId}"></option>
+                </th:block>
+            </select>
+        </div>
+        <div class="d-flex align-items-center">
+            <span style="width:150px;"><label for="patientName">환자명</label></span>
+            <input type="text" id="patientName" th:field="*{patientName}" class="form-control" placeholder="이름을 입력하세요">
+        </div>
+        <div class="d-flex align-items-center">
+            <span style="width:150px;"><label for="patientEnrollNum">환자등록번호</label></span>
+            <input type="text" id="patientEnrollNum" th:field="*{patientEnrollNum}" class="form-control" placeholder="환자등록번호를 입력하세요">
+        </div>
+        <div class="d-flex align-items-center">
+            <span style="width:150px;"><label for="sexualCode">성별</label></span>
+            <select class="form-select" id="sexualCode" th:field="*{sexualCode}"/>
+                <th:block th:each="code : ${codes}">
+                    <option th:if="${code.codeGroup.codeGroupId == '성별코드'}" th:object="${code}" th:value="*{codeId}" th:text="*{codeName}"></option>
+                </th:block>
+            </select>
+        </div>
+        <div class="d-flex align-items-center">
+            <span style="width:150px;"><label for="birth">생년월일</label></span>
+            <input type="text" id="birth" th:field="*{birth}" class="form-control" placeholder="생년월일을 입력하세요">
+        </div>
+        <div class="d-flex align-items-center">
+            <span style="width:150px;"><label for="phone">휴대폰번호</label></span>
+            <input type="text" id="phone" th:field="*{phone}" class="form-control" placeholder="휴대폰번호를 입력하세요">
+        </div>
+        <div class="d-flex justify-content-center mt-3">
+            <button type="button" class="btn btn-outline-primary" onclick="insert()">등록</button>
+            <button type="button" class="btn btn-outline-secondary" onclick="reset()">취소</button>
+        </div>
+    </form>
+</div>
+<script th:inline="javascript">
+    function insert(){
+        console.log('insert', $('#hospitalId').val());
+        if(validationCheck()){
+            $('#insertForm').submit();
+        }
+    }
+
+    function validationCheck(){
+        // TODO: validation check 추가 필요
+        return true;
+    }
+</script>
+</body>
+</html>

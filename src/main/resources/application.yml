@@ -11,6 +11,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     open-in-view: false
+
     hibernate:
       ddl-auto: none
     properties:
@@ -19,6 +20,12 @@ spring:
         physical_naming_strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
         implicit_naming_strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
     defer-datasource-initialization: true
+    show-sql: true
   sql:
     init:
       mode: always
+      schema-locations: classpath:db/schema.sql
+      data-locations: classpath:db/data.sql
+
+  mvc:
+    static-path-pattern: /static/**

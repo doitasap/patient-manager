@@ -21,7 +21,7 @@ public class Code {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "code_group_id")
     @ToString.Exclude
-    private CodeGroup codeGroupId;
+    private CodeGroup codeGroup;
 
     @Column(name = "code_name", length = 10)
     private String codeName;

@@ -22,7 +22,13 @@ public class PatientService {
     private final EntityManager em;
 
     public List<PatientDto> searchAll(PatientCriterion criterion){
-        return patientRepository.searchAll().stream().map(PatientDto::new).collect(Collectors.toList());
+        List<PatientDto> list = patientRepository.searchAll().stream().map(PatientDto::new).collect(Collectors.toList());
+        if(Objects.nonNull(criterion.getSearchHospitalId())){
+            list = list.stream()
+                    .filter(p -> p.getHospital().longValue() == criterion.getSearchHospitalId().longValue())
+                    .collect(Collectors.toList());
+        }
+        return list;
     }
 
     public PatientDto detail(Long id){
@@ -32,7 +38,7 @@ public class PatientService {
 
     @Transactional
     public void insert(PatientDto patientDto){
-        Hospital hospital = em.find(Hospital.class, patientDto.getHospital().getHospitalId());
+        Hospital hospital = em.find(Hospital.class, patientDto.getHospital());
         Patient entity = new Patient(patientDto);
         entity.setHospital(hospital);
         patientRepository.save(entity);
@@ -41,7 +47,7 @@ public class PatientService {
     @Transactional
     public void update(PatientDto patientDto){
         Patient patient = Objects.requireNonNull(patientRepository.findById(patientDto.getId()).orElse(null));
-        Hospital hospital = em.find(Hospital.class, patientDto.getHospital().getHospitalId());
+        Hospital hospital = em.find(Hospital.class, patientDto.getHospital());
         if(hospital != patient.getHospital()){
             patient.changeInfo(patientDto, hospital);
         }

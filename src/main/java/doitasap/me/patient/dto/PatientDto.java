@@ -18,7 +18,7 @@ public class PatientDto {
     private String sexualCode;
     private String birth;
     private String phone;
-    private HospitalDto hospital;
+    private Long hospital;
 
     public PatientDto(Patient patient) {
         this.id = patient.getPatientId();
@@ -27,7 +27,7 @@ public class PatientDto {
         this.sexualCode = patient.getSexualCode();
         this.birth = patient.getBirth();
         this.phone = patient.getPhone();
-        this.hospital = new HospitalDto(patient.getHospital());
+        this.hospital = patient.getHospital().getHospitalId();
     }
 }
 
