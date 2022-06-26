@@ -1,6 +1,14 @@
 # patient-manager
 ### 에이치디정션 백엔드 개발자 채용 온라인 과제
 
+작업 필요 사항
+```
+1. 화면 페이징 처리
+2. queryDSL 연동
+3. restdocs 작업
+4. validation 체크 기능
+```
+
 
 > ## 개발 환경
 >```
