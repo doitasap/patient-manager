@@ -12014,6 +12014,8 @@ strong {
     height: 3px;
 }
 
+input.form-check{width: 150px !important;}
+
 @media (max-width: 768px) {
     .navbar-toggle {
         position: absolute;

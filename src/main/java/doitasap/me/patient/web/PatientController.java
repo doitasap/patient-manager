@@ -17,6 +17,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * 2022-06-25 오후 6:23
@@ -34,8 +35,9 @@ public class PatientController {
     @GetMapping({"/", "/searchAll"})
     public String searchAll(HttpSession session, @ModelAttribute PatientCriterion criterion, Model model) {
         log.info("환자 목록 조회..");
-        if(Objects.isNull(criterion.getSearchHospitalId())){
-            if(Objects.nonNull(session.getAttribute("hospitalId"))){
+        log.debug("criterion : {} ", criterion);
+        if (Objects.isNull(criterion.getSearchHospitalId())) {
+            if (Objects.nonNull(session.getAttribute("hospitalId"))) {
                 criterion.setSearchHospitalId(
                         Long.parseLong(String.valueOf(session.getAttribute("hospitalId")))
                 );
@@ -58,6 +60,7 @@ public class PatientController {
                 .filter(h -> h.getHospitalId().longValue() == hospitalId)
                 .findFirst().orElse(null)).getHospitalName());
         model.addAttribute("selectHospital", hospitalId);
+        model.addAttribute("criterion", criterion);
         return "patient/list";
     }
 
@@ -86,7 +89,10 @@ public class PatientController {
         log.info("환자 등록..");
         log.debug("patientDto : {} ", patientDto);
 
+
         try {
+            String enrollNum = UUID.randomUUID().toString().substring(0, 10);
+            patientDto.setPatientEnrollNum(enrollNum);
             patientService.insert(patientDto);
         } catch (Exception e) {
             log.error("환자 등록 과정에서 오류 발생 : {} ", e.getMessage(), e);

@@ -11,4 +11,6 @@ import lombok.Data;
 public class PatientCriterion {
     private Long searchHospitalId;
     private String searchPatientName;
+    private String searchEnrollNum;
+    private String searchBirth;
 }

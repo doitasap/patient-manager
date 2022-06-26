@@ -8,6 +8,7 @@ import doitasap.me.patient.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -38,9 +39,19 @@ public class PatientService {
                     .filter(p -> p.getHospital().longValue() == criterion.getSearchHospitalId().longValue())
                     .collect(Collectors.toList());
         }
-        if (Objects.nonNull(criterion.getSearchPatientName())) {
+        if (StringUtils.hasText(criterion.getSearchPatientName())) {
             list = list.stream()
                     .filter(p -> p.getPatientName().contains(criterion.getSearchPatientName()))
+                    .collect(Collectors.toList());
+        }
+        if (StringUtils.hasText(criterion.getSearchEnrollNum())) {
+            list = list.stream()
+                    .filter(p -> p.getPatientEnrollNum().equals(criterion.getSearchEnrollNum()))
+                    .collect(Collectors.toList());
+        }
+        if (StringUtils.hasText(criterion.getSearchBirth())) {
+            list = list.stream()
+                    .filter(p -> p.getBirth().equals(criterion.getSearchBirth()))
                     .collect(Collectors.toList());
         }
         return list;
