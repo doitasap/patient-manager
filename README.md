@@ -6,6 +6,7 @@
 >```
 >JAVA : openJDK 11
 >DB : H2 Database
+>server port : 10001
 >```
 
 > ## 프로젝트 빌드

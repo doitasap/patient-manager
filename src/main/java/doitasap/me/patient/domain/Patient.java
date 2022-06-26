@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 2022-06-25 오후 3:24
@@ -38,6 +40,11 @@ public class Patient {
     @ToString.Exclude
     private Hospital hospital;
 
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private List<Visit> visit = new ArrayList<>();
+
+
     public Patient(String patientName, String patientEnrollNum, String sexualCode, String birth, String phone, Hospital hospital) {
         this(patientName, patientEnrollNum, sexualCode, birth, phone);
         this.hospital = hospital;
@@ -59,12 +66,11 @@ public class Patient {
     }
 
     public void changeInfo(PatientDto dto, Hospital hospital){
-        changeInfo(dto);
         this.hospital = hospital;
+        changeInfo(dto);
     }
     public void changeInfo(PatientDto dto){
         if(!dto.getPatientName().equals(this.patientName)) this.patientName = dto.getPatientName();
-        if(!dto.getPatientEnrollNum().equals(this.patientEnrollNum)) this.patientEnrollNum = dto.getPatientEnrollNum();
         if(!dto.getSexualCode().equals(this.sexualCode)) this.sexualCode = dto.getSexualCode();
         if(!dto.getBirth().equals(this.birth)) this.birth = dto.getBirth();
         if(!dto.getPhone().equals(this.phone)) this.phone = dto.getPhone();

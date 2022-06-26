@@ -19,21 +19,25 @@
 
 <div class="d-flex justify-content-center pt-5">
     <table class="table">
-        <tr>
+        <tr class="text-center">
             <th>이름</th>
             <th>환자등록번호</th>
             <th>성별</th>
             <th>생년월일</th>
             <th>휴대전화</th>
-            <!--        <th>최근방문</th>-->
+            <th>방문일자</th>
         </tr>
-        <tr th:if="${list.size()} != 0" th:each="patient : ${list}">
+        <tr th:if="${list.size()} != 0" th:each="patient : ${list}" class="text-center" th:onclick="|detail(${patient.id}, ${patient.visitId})|" style="cursor: pointer;">
             <td th:text="${patient.patientName}">name</td>
             <td th:text="${patient.patientEnrollNum}">enroll no.</td>
-            <td th:text="${patient.sexualCode}">sexual</td>
+            <th:block th:each="code : ${codes}">
+                <td th:if="${code.codeId == patient.sexualCode}" th:object="${code}" th:text="*{codeName}"></td>
+            </th:block>
             <td th:text="${patient.birth}">birth</td>
             <td th:text="${patient.phone}">phone</td>
-            <!--        <td th:text="${patient.hospital}">hospital</td>-->
+            <td th:if="${patient.visitDate} != null" th:text="${#temporals.format(patient.visitDate, 'yyyy/MM/dd HH:mm')}">visitDate</td>
+            <td th:unless="${patient.visitDate} != null" th:text="'-'">visitDate</td>
+
         </tr>
         <tr th:unless="${list.size()} != 0" class="dataWrapper">
             <td colspan="5" class="text-center">검색 결과가 없습니다.</td>
@@ -41,6 +45,16 @@
 
     </table>
 </div>
+<script th:inline="javascript">
+    function detail(patientId, visitId){
+        if(visitId !== undefined && visitId !== null){
+            window.location.href = `/patient/${patientId}/${visitId}`
+        }else{
+            window.location.href = `/patient/${patientId}`
+        }
+    }
+</script>
+
 </body>
 
 </html>

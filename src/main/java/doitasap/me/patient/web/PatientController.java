@@ -34,9 +34,18 @@ public class PatientController {
     @GetMapping({"/", "/searchAll"})
     public String searchAll(HttpSession session, @ModelAttribute PatientCriterion criterion, Model model) {
         log.info("환자 목록 조회..");
-        List<PatientDto> list = patientService.searchAll(criterion);
+        if(Objects.isNull(criterion.getSearchHospitalId())){
+            if(Objects.nonNull(session.getAttribute("hospitalId"))){
+                criterion.setSearchHospitalId(
+                        Long.parseLong(String.valueOf(session.getAttribute("hospitalId")))
+                );
+            }
+        }
+
+        List<PatientDto> list = patientService.searchAllReservation(criterion);
         log.debug("list : {} ", list);
         model.addAttribute("list", list);
+        model.addAttribute("codes", codeService.searchAllCodes());
 
         List<HospitalDto> hospitals = hospitalService.searchAll();
         model.addAttribute("hospitals", hospitals);
@@ -62,11 +71,14 @@ public class PatientController {
         return "patient/insertForm";
     }
 
-    @GetMapping("/{patientId}")
-    @ResponseBody
-    public PatientDto detail(@PathVariable Long patientId) {
-        log.info("환자 조회..");
-        return patientService.detail(patientId);
+    @GetMapping({"/{patientId}", "/{patientId}/{visitId}"})
+    public String detail(@PathVariable Long patientId, @PathVariable(required = false) Long visitId, Model model) {
+        log.info("환자 상세 조회..");
+        model.addAttribute("patient", patientService.detail(patientId, visitId));
+        model.addAttribute("codes", codeService.searchAllCodes());
+        List<HospitalDto> hospitals = hospitalService.searchAll();
+        model.addAttribute("hospitals", hospitals);
+        return "patient/detail";
     }
 
     @PostMapping
@@ -84,7 +96,7 @@ public class PatientController {
 
     @PutMapping("/{patientId}")
     @ResponseBody
-    public void update(@ModelAttribute @Validated PatientDto patientDto) {
+    public void update(@RequestBody @Validated PatientDto patientDto) {
         log.info("환자 수정..");
         log.debug("patientDto : {} ", patientDto);
         patientService.update(patientDto);

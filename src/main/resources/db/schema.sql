@@ -1,3 +1,4 @@
+create sequence IF NOT EXISTS hibernate_sequence start with 1 increment by 1;
 create table IF NOT EXISTS pm_code (
                          code_id varchar(10) not null,
                          code_name varchar(10),

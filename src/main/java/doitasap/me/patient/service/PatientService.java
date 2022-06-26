@@ -23,12 +23,22 @@ public class PatientService {
 
     public List<PatientDto> searchAll(PatientCriterion criterion){
         List<PatientDto> list = patientRepository.searchAll().stream().map(PatientDto::new).collect(Collectors.toList());
-        if(Objects.nonNull(criterion.getSearchHospitalId())){
+        list = setCriterion(criterion, list);
+        return list;
+    }
+    public List<PatientDto> searchAllReservation(PatientCriterion criterion){
+        List<PatientDto> list = patientRepository.searchAllReservation().stream().map(PatientDto::new).collect(Collectors.toList());
+        list = setCriterion(criterion, list);
+        return list;
+    }
+
+    private List<PatientDto> setCriterion(PatientCriterion criterion, List<PatientDto> list) {
+        if (Objects.nonNull(criterion.getSearchHospitalId())) {
             list = list.stream()
                     .filter(p -> p.getHospital().longValue() == criterion.getSearchHospitalId().longValue())
                     .collect(Collectors.toList());
         }
-        if(Objects.nonNull(criterion.getSearchPatientName())){
+        if (Objects.nonNull(criterion.getSearchPatientName())) {
             list = list.stream()
                     .filter(p -> p.getPatientName().contains(criterion.getSearchPatientName()))
                     .collect(Collectors.toList());
@@ -36,9 +46,12 @@ public class PatientService {
         return list;
     }
 
-    public PatientDto detail(Long id){
-        Patient patient = Objects.requireNonNull(patientRepository.detail(id));
-        return new PatientDto(patient);
+    public PatientDto detail(Long id, Long visitId){
+        if(Objects.nonNull(visitId)){
+            return new PatientDto(Objects.requireNonNull(patientRepository.detail(id, visitId)));
+        }else{
+            return new PatientDto(Objects.requireNonNull(patientRepository.detail(id)));
+        }
     }
 
     @Transactional
@@ -52,10 +65,7 @@ public class PatientService {
     @Transactional
     public void update(PatientDto patientDto){
         Patient patient = Objects.requireNonNull(patientRepository.findById(patientDto.getId()).orElse(null));
-        Hospital hospital = em.find(Hospital.class, patientDto.getHospital());
-        if(hospital != patient.getHospital()){
-            patient.changeInfo(patientDto, hospital);
-        }
+        patient.changeInfo(patientDto);
         if(em.contains(patient)){
             em.merge(patient);
         }

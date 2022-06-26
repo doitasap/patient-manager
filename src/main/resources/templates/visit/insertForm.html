@@ -1,30 +1,56 @@
 <html xmlns:th="https://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'insertForm')}">
-
 <body>
 <h1 th:text="|[${session.hospitalName}] 방문 등록|">enroll</h1>
 <div class="d-flex justify-content-center pt-5">
     <form id="insertForm" action="/visit" th:object="${visit}" method="post" style="width: 500px;">
         <div class="d-flex align-items-center">
             <span style="width:150px;"><label for="hospital">병원</label></span>
-            <select class="form-select" th:name="hospital" id="hospital" disabled onchange="$()">
+            <select class="form-select" id="hospitalTemp" disabled>
                 <th:block th:each="item : ${hospitals}">
                     <option th:value="${item.hospitalId}" th:text="${item.hospitalName}" th:selected="${item.hospitalId} == ${session.hospitalId}"></option>
                 </th:block>
             </select>
+            <input type="hidden" name="hospital"/>
         </div>
         <div class="d-flex align-items-center">
             <div class="d-flex flex-row flex-grow-1">
-                    <span style="width:150px;"><label for="patientName">환자명</label></span>
-                    <input type="text" id="patientName" th:field="*{patient}" class="form-control" placeholder="이름을 입력하세요" onkeyup="searchPatient()">
+                <span style="width:150px;"><label for="patientName">환자명</label></span>
+                <select class="form-select" id="patientName" name="patient">
+                    <th:block th:if="${patientList.size()} > 0" th:each="patient : ${patientList}">
+                        <option th:value="${patient.id}" th:text="${patient.patientName}"></option>
+                    </th:block>
+                    <th:block th:unless="${patientList.size()} > 0">
+                        <option value="" th:text="'등록된 환자가 없습니다.'" selected></option>
+                    </th:block>
+                </select>
             </div>
         </div>
-
-        <th:block th:if="${patientList.size() > 0}">
-            <div>선택창이 나올거에요</div>
-        </th:block>
+        <div class="d-flex align-items-center">
+            <span style="width:150px;"><label for="visitDate">방문일시</label></span>
+            <input class="form-control" name="visitDate" id="visitDate" type="text" placeholder="날짜 입력..."/>
+        </div>
+        <div class="d-flex justify-content-center mt-3">
+            <button type="button" class="btn btn-outline-primary" onclick="insert()">등록</button>
+            <button type="button" class="btn btn-outline-secondary" onclick="reset()">취소</button>
+        </div>
     </form>
 </div>
+<script>
+    function insert(){
+        $('input[name=hospital]').val($('#hospitalTemp').val())
+        if(validationCheck()){
+            $('#insertForm').submit();
+        }
+    }
+
+    function validationCheck(){
+        // TODO: validation check 추가 필요
+        return true;
+    }
+
+    setTimeout(function(){
+        $(document.getElementById("visitDate")).datetimepicker();
+    }, 500);
+</script>
 </body>
-
-
 </html>

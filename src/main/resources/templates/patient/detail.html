@@ -3,7 +3,87 @@
 <body>
 <h1 th:text="|환자 상세|">detail</h1>
 <div class="d-flex justify-content-center pt-5">
+    <form id="detailForm" name="detailForm" method="post" th:object="${patient}" style="width: 500px;">
+        <input type="hidden" th:field="*{id}">
+        <div class="d-flex align-items-center">
+            <span style="width:150px;"><label for="hospital">병원</label></span>
+            <select class="form-select" id="hospitalTemp" disabled>
+                <th:block th:each="item : ${hospitals}">
+                    <option th:value="${item.hospitalId}" th:text="${item.hospitalName}" th:selected="${item.hospitalId} == ${session.hospitalId}"></option>
+                </th:block>
+            </select>
+            <input type="hidden" name="hospital"/>
+        </div>
+        <div class="d-flex align-items-center">
+            <span style="width:150px;"><label for="patientName">환자명</label></span>
+            <input type="text" id="patientName" th:field="*{patientName}" class="form-control" placeholder="이름을 입력하세요">
+        </div>
+        <div class="d-flex align-items-center">
+            <span style="width:150px;"><label for="sexualCode">성별</label></span>
+            <select class="form-select" id="sexualCode" th:field="*{sexualCode}"/>
+            <th:block th:each="code : ${codes}">
+                <option th:if="${code.codeGroup.codeGroupId == '성별코드'}" th:object="${code}" th:value="*{codeId}" th:text="*{codeName}" th:selected="*{codeId} == ${patient.sexualCode}"></option>
+            </th:block>
+            </select>
+        </div>
+        <div class="d-flex align-items-center">
+            <span style="width:150px;"><label for="birth">생년월일</label></span>
+            <input type="text" id="birth" th:field="*{birth}" class="form-control" placeholder="생년월일을 입력하세요">
+        </div>
+        <div class="d-flex align-items-center">
+            <span style="width:150px;"><label for="phone">휴대폰번호</label></span>
+            <input type="text" id="phone" th:field="*{phone}" class="form-control" placeholder="휴대폰번호를 입력하세요">
+        </div>
+        <div class="d-flex align-items-center">
+            <span style="width:150px;"><label for="visitDate">방문일시</label></span>
+            <input class="form-control" th:field="*{visitDate}" type="text" disabled/>
+        </div>
+        <div class="d-flex justify-content-center mt-3">
+            <button type="button" class="btn btn-outline-primary" th:onclick="|update(${patient.id})|">수정</button>
+            <button type="button" class="btn btn-outline-secondary" onclick="history.back()">목록</button>
+            <button type="button" class="btn btn-outline-danger" th:onclick="|deleteInfo(${patient.id})|">삭제</button>
+        </div>
+    </form>
 </div>
+<script th:inline="javascript">
+    async function update(patientId){
+        $('input[name=hospital]').val($('#hospitalTemp').val());
+
+        await fetch('/patient/'+patientId, {
+            method: 'put',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body : JSON.stringify({
+                id: $('input[name=id]').val(),
+                hospital: $('input[name=hospital]').val(),
+                patientName: $('input[name=patientName]').val(),
+                sexualCode : $('select[name=sexualCode]').val(),
+                birth : $('input[name=birth]').val(),
+                phone : $('input[name=phone]').val()
+            })
+        })
+        .then((response) => {
+            location.href='/patient/searchAll';
+        })
+        .catch((error) => console.log("error:", error));
+    }
+    async function deleteInfo(patientId){
+        const isFlag = confirm('환자 정보를 삭제하시겠습니까?(방문내역도 모두 삭제됩니다.)')
+        if(isFlag){
+            await fetch('/patient/'+patientId, {
+                method: 'delete',
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            })
+            .then((response) => {
+                location.href='/patient/searchAll';
+            })
+            .catch((error) => console.log("error:", error));
+        }
+    }
+</script>
 </body>
 
 </html>

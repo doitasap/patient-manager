@@ -46,7 +46,6 @@
 <script th:inline="javascript">
     function insert(){
         $('input[name=hospital]').val($('#hospitalTemp').val())
-        console.log($('input[name=hospital]').val())
         if(validationCheck()){
             $('#insertForm').submit();
         }

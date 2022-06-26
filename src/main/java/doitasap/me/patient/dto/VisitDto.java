@@ -2,6 +2,7 @@ package doitasap.me.patient.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 public class VisitDto {
     private Long patient;
     private Long hospital;
+    @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm")
     private LocalDateTime visitDate;
     private String visitState;
 }
