@@ -6,9 +6,13 @@ package doitasap.me.patient.criterion;
  */
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class PatientCriterion {
+@ToString(callSuper = true)
+public class PatientCriterion extends Pagination{
     private Long searchHospitalId;
     private String searchPatientName;
     private String searchEnrollNum;

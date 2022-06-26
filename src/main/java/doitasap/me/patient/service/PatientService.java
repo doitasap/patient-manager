@@ -6,6 +6,9 @@ import doitasap.me.patient.domain.Patient;
 import doitasap.me.patient.dto.PatientDto;
 import doitasap.me.patient.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -27,10 +30,23 @@ public class PatientService {
         list = setCriterion(criterion, list);
         return list;
     }
-    public List<PatientDto> searchAllReservation(PatientCriterion criterion){
-        List<PatientDto> list = patientRepository.searchAllReservation().stream().map(PatientDto::new).collect(Collectors.toList());
+//    public List<PatientDto> searchAllReservation(PatientCriterion criterion){
+//        List<PatientDto> list = patientRepository.searchAllReservation().stream().map(PatientDto::new).collect(Collectors.toList());
+//        list = setCriterion(criterion, list);
+//        return list;
+//    }
+
+    public Page<PatientDto> searchAllReservation(PatientCriterion criterion){
+        List<PatientDto> list = patientRepository.searchAllReservation()
+                .stream()
+                .map(PatientDto::new)
+                .collect(Collectors.toList());
+
         list = setCriterion(criterion, list);
-        return list;
+        return new PageImpl<>(
+                list.subList(0, Math.min(list.size() - criterion.getOffset(), criterion.getRowCount())),
+                PageRequest.of(criterion.getPageNum() - 1, criterion.getRowCount()),
+                list.size());
     }
 
     private List<PatientDto> setCriterion(PatientCriterion criterion, List<PatientDto> list) {

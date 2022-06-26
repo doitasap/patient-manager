@@ -8,6 +8,7 @@ import doitasap.me.patient.service.HospitalService;
 import doitasap.me.patient.service.PatientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -44,7 +45,7 @@ public class PatientController {
             }
         }
 
-        List<PatientDto> list = patientService.searchAllReservation(criterion);
+        Page<PatientDto> list = patientService.searchAllReservation(criterion);
         log.debug("list : {} ", list);
         model.addAttribute("list", list);
         model.addAttribute("codes", codeService.searchAllCodes());

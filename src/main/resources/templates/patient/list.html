@@ -18,8 +18,9 @@
 </div>
 
 <div class="d-flex flex-column py-3" style="background-color: #f8f9fa; border: 1px solid #000;">
-    <form action="/searchAll" th:object="${criterion}">
-        <input type="hidden" name="searchHospitalId" th:value="${session.hospitalId}">
+    <form name="searchForm" action="/searchAll" th:object="${criterion}">
+        <input type="hidden" name="searchHospitalId" th:value="${session.hospitalId}"/>
+        <input type="hidden" name="pageNum"/>
         <div class="float-start pl-5"><h3 class="mb-0" th:text="|검색조건|">search</h3></div>
         <div class="d-flex align-items-center mt-3">
             <div class="flex-grow-1 d-flex flex-row justify-content-between">
@@ -44,8 +45,11 @@
     </form>
 </div>
 
-<div class="d-flex justify-content-center pt-5">
+<div class="d-flex justify-content-center pt-5 flex-column">
     <table class="table">
+        <tr>
+            <th colspan="6">총 [[${list.getTotalElements()}]]건 입니다.</th>
+        </tr>
         <tr class="text-center">
             <th>이름</th>
             <th>환자등록번호</th>
@@ -54,7 +58,7 @@
             <th>휴대전화</th>
             <th>방문일자</th>
         </tr>
-        <tr th:if="${list.size()} != 0" th:each="patient : ${list}" class="text-center" th:onclick="|detail(${patient.id}, ${patient.visitId})|" style="cursor: pointer;">
+        <tr th:if="${list.getTotalElements()} != 0" th:each="patient : ${list.content}" class="text-center" th:onclick="|detail(${patient.id}, ${patient.visitId})|" style="cursor: pointer;">
             <td th:text="${patient.patientName}">name</td>
             <td th:text="${patient.patientEnrollNum}">enroll no.</td>
             <th:block th:each="code : ${codes}">
@@ -66,11 +70,67 @@
             <td th:unless="${patient.visitDate} != null" th:text="'-'">visitDate</td>
 
         </tr>
-        <tr th:unless="${list.size()} != 0" class="dataWrapper">
+        <tr th:unless="${list.getTotalElements()} != 0" class="dataWrapper">
             <td colspan="6" class="text-center">검색 결과가 없습니다.</td>
         </tr>
-
     </table>
+    <div class="d-flex justify-content-center">
+        <nav
+                th:with="
+                pageNumber = ${list.pageable.pageNumber},
+                pageSize = ${list.pageable.pageSize},
+                totalPages = ${list.totalPages},
+                startPage = ${T(java.lang.Math).floor(pageNumber / pageSize) * pageSize + 1},
+                tempEndPage = ${startPage + pageSize - 1},
+                endPage = (${tempEndPage > totalPages ? totalPages : tempEndPage})"
+                aria-label="Page navigation example">
+            <ul class="pagination">
+                <li th:classappend="${pageNumber + 1 <= pageSize + 1} ? 'disabled'" class="page-item">
+                    <a class="page-link" onclick="pageMove(1)">
+                        <span>&laquo;</span>
+                        <span class="sr-only">First</span>
+                    </a>
+                </li>
+                <li th:classappend="${list.first} ? 'disabled'" class="page-item">
+                    <th:block th:if="${list.first}">
+                        <a class="page-link" th:href="'#'" aria-label="Next">
+                            <span aria-hidden="true">&lt;</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </th:block>
+                    <th:block th:unless="${list.first}">
+                        <a th:with="page = ${#numbers.formatDecimal(startPage - pageSize, 0, -1)}" class="page-link" th:onclick="pageMove([[${page}]])" aria-label="Previous">
+                            <span aria-hidden="true">&lt;</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </th:block>
+                </li>
+                <li th:each="page: ${#numbers.sequence(startPage, endPage)}" th:classappend="${page == pageNumber + 1} ? 'active'" class="page-item">
+                    <a th:text="${page}" class="page-link" th:onclick="pageMove([[${page}]])"></a>
+                </li>
+                <li th:classappend="${list.last} ? 'disabled'" class="page-item">
+                    <th:block th:if="${list.last}">
+                        <a class="page-link" th:href="'#'" aria-label="Next">
+                            <span aria-hidden="true">&gt;</span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </th:block>
+                    <th:block th:unless="${list.last}">
+                        <a th:with="page = ${#numbers.formatDecimal(startPage + pageSize, 0, -1)}" class="page-link" th:onclick="pageMove([[${page}]])" aria-label="Next">
+                            <span aria-hidden="true">&gt;</span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </th:block>
+                </li>
+                <li th:classappend=" ${T(java.lang.Math).floor(totalPages/pageSize)*pageSize <= startPage} ? 'disabled'" class="page-item">
+                    <a class="page-link" th:onclick="pageMove([[${totalPages}]])">
+                        <span>&raquo;</span>
+                        <span class="sr-only">Last</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
 </div>
 <script th:inline="javascript">
     function detail(patientId, visitId){
@@ -79,6 +139,11 @@
         }else{
             window.location.href = `/patient/${patientId}`
         }
+    }
+
+    function pageMove(page){
+        $('input[name=pageNum]').val(page);
+        document.searchForm.submit()
     }
 </script>
 
