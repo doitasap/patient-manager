@@ -42,7 +42,7 @@ create table IF NOT EXISTS pm_visit (
 );
 
 alter table pm_patient
-    add constraint IF NOT EXISTS idAndHospitalId unique (patient_id, hospital_id);
+    add constraint IF NOT EXISTS enrollNumAndHospitalId unique (patient_enroll_num, hospital_id);
 alter table pm_visit
     add constraint IF NOT EXISTS idAndPatientIdAndHospitalId unique (visit_id, patient_id, hospital_id);
 alter table pm_code

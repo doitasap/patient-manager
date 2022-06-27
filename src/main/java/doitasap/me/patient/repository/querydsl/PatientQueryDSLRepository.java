@@ -1,6 +1,8 @@
 package doitasap.me.patient.repository.querydsl;
 
+import doitasap.me.patient.criterion.PatientApiCriterion;
 import doitasap.me.patient.criterion.PatientCriterion;
+import doitasap.me.patient.dto.PatientApiDto;
 import doitasap.me.patient.dto.PatientDto;
 import org.springframework.data.domain.Page;
 
@@ -22,6 +24,14 @@ public interface PatientQueryDSLRepository {
      * @return
      */
     Page<PatientDto> searchAllReservation(PatientCriterion criterion);
+
+
+    /**
+     * API 전용 전체 조회
+     * @param criterion
+     * @return
+     */
+    Page<PatientApiDto> searchAllForApi(PatientApiCriterion criterion);
 
 
 }

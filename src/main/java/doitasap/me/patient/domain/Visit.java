@@ -1,5 +1,6 @@
 package doitasap.me.patient.domain;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 })
 @NoArgsConstructor
 @ToString
+@Getter
 public class Visit {
     @Id @GeneratedValue
     private Long visitId;

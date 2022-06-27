@@ -1,5 +1,6 @@
 package doitasap.me.patient.domain;
 
+import doitasap.me.patient.dto.PatientApiDto;
 import doitasap.me.patient.dto.PatientDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -65,11 +66,27 @@ public class Patient {
         this.phone = dto.getPhone();
     }
 
+    public Patient(PatientApiDto dto, Hospital hospital) {
+        this.patientName = dto.getPatientName();
+        this.patientEnrollNum = dto.getPatientEnrollNum();
+        this.sexualCode = dto.getSexualCode();
+        this.birth = dto.getBirth();
+        this.phone = dto.getPhone();
+        this.hospital = hospital;
+    }
+
     public void changeInfo(PatientDto dto, Hospital hospital){
         this.hospital = hospital;
         changeInfo(dto);
     }
     public void changeInfo(PatientDto dto){
+        if(!dto.getPatientName().equals(this.patientName)) this.patientName = dto.getPatientName();
+        if(!dto.getSexualCode().equals(this.sexualCode)) this.sexualCode = dto.getSexualCode();
+        if(!dto.getBirth().equals(this.birth)) this.birth = dto.getBirth();
+        if(!dto.getPhone().equals(this.phone)) this.phone = dto.getPhone();
+    }
+
+    public void changeInfo(PatientApiDto dto){
         if(!dto.getPatientName().equals(this.patientName)) this.patientName = dto.getPatientName();
         if(!dto.getSexualCode().equals(this.sexualCode)) this.sexualCode = dto.getSexualCode();
         if(!dto.getBirth().equals(this.birth)) this.birth = dto.getBirth();

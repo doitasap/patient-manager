@@ -2,9 +2,9 @@ package doitasap.me.patient.repository.querydsl;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import doitasap.me.patient.criterion.PatientApiCriterion;
 import doitasap.me.patient.criterion.PatientCriterion;
-import doitasap.me.patient.dto.PatientDto;
-import doitasap.me.patient.dto.QPatientDto;
+import doitasap.me.patient.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -35,10 +35,10 @@ public class PatientQueryDSLRepositoryImpl implements PatientQueryDSLRepository 
                 .innerJoin(patient.hospital(), hospital)
                 .fetchJoin()
                 .where(
-                        eqHospitalId(criterion),
-                        containsPatientName(criterion),
-                        eqPatientEnrollNum(criterion),
-                        eqPatientBirth(criterion)
+                        eqHospitalId(criterion.getSearchHospitalId()),
+                        containsPatientName(criterion.getSearchPatientName()),
+                        eqPatientEnrollNum(criterion.getSearchEnrollNum()),
+                        eqPatientBirth(criterion.getSearchBirth())
                 )
                 .orderBy(patient.patientName.asc())
                 .fetch();
@@ -56,10 +56,10 @@ public class PatientQueryDSLRepositoryImpl implements PatientQueryDSLRepository 
                 .innerJoin(patient.hospital(), hospital)
                 .leftJoin(patient.visit, visit)
                 .where(
-                        eqHospitalId(criterion),
-                        containsPatientName(criterion),
-                        eqPatientEnrollNum(criterion),
-                        eqPatientBirth(criterion)
+                        eqHospitalId(criterion.getSearchHospitalId()),
+                        containsPatientName(criterion.getSearchPatientName()),
+                        eqPatientEnrollNum(criterion.getSearchEnrollNum()),
+                        eqPatientBirth(criterion.getSearchBirth())
                 )
                 .offset(criterion.getOffset())
                 .limit(criterion.getRowCount())
@@ -72,10 +72,10 @@ public class PatientQueryDSLRepositoryImpl implements PatientQueryDSLRepository 
                         .innerJoin(patient.hospital(), hospital)
                         .leftJoin(patient.visit, visit)
                         .where(
-                                eqHospitalId(criterion),
-                                containsPatientName(criterion),
-                                eqPatientEnrollNum(criterion),
-                                eqPatientBirth(criterion)
+                                eqHospitalId(criterion.getSearchHospitalId()),
+                                containsPatientName(criterion.getSearchPatientName()),
+                                eqPatientEnrollNum(criterion.getSearchEnrollNum()),
+                                eqPatientBirth(criterion.getSearchBirth())
                         )
                         .fetchOne()
         );
@@ -84,23 +84,52 @@ public class PatientQueryDSLRepositoryImpl implements PatientQueryDSLRepository 
                 totalCount);
     }
 
-    private BooleanExpression containsPatientName(PatientCriterion criterion) {
-        return StringUtils.hasText(criterion.getSearchPatientName()) ?
-                patient.patientName.contains(criterion.getSearchPatientName()) : null;
+    @Override
+    public Page<PatientApiDto> searchAllForApi(PatientApiCriterion criterion) {
+        List<PatientApiDto> list = query
+                .select(new QPatientApiDto(patient.patientId, patient.patientName, patient.patientEnrollNum, patient.sexualCode,
+                        patient.birth, patient.phone, visit.visitDate.max().as("recentDate")))
+                .from(patient)
+                .leftJoin(patient.visit, visit)
+                .where(
+                        containsPatientName(criterion.getSearchPatientName()),
+                        eqPatientEnrollNum(criterion.getSearchEnrollNum()),
+                        eqPatientBirth(criterion.getSearchBirth())
+                )
+                .offset(criterion.getOffset())
+                .limit(criterion.getPageSize())
+                .groupBy(patient.patientId)
+                .fetch();
+
+        Long totalCount = Objects.requireNonNull(query.select(patient.count())
+                .from(patient)
+                .where(
+                        containsPatientName(criterion.getSearchPatientName()),
+                        eqPatientEnrollNum(criterion.getSearchEnrollNum()),
+                        eqPatientBirth(criterion.getSearchBirth())
+                )
+                .fetchOne());
+
+        return new PageImpl<>(list, PageRequest.of(criterion.getPageNo() - 1, criterion.getPageSize()), totalCount);
     }
 
-    private BooleanExpression eqHospitalId(PatientCriterion criterion) {
-        return Objects.nonNull(criterion.getSearchHospitalId()) ?
-                patient.hospital().hospitalId.eq(criterion.getSearchHospitalId()) : null;
+    private BooleanExpression containsPatientName(String patientName) {
+        return StringUtils.hasText(patientName) ?
+                patient.patientName.contains(patientName) : null;
     }
 
-    private BooleanExpression eqPatientEnrollNum(PatientCriterion criterion) {
-        return StringUtils.hasText(criterion.getSearchEnrollNum()) ?
-                patient.patientEnrollNum.eq(criterion.getSearchEnrollNum()) : null;
+    private BooleanExpression eqHospitalId(Long hospitalId) {
+        return Objects.nonNull(hospitalId) ?
+                patient.hospital().hospitalId.eq(hospitalId) : null;
     }
 
-    private BooleanExpression eqPatientBirth(PatientCriterion criterion) {
-        return StringUtils.hasText(criterion.getSearchBirth()) ?
-                patient.birth.eq(criterion.getSearchBirth()) : null;
+    private BooleanExpression eqPatientEnrollNum(String enrollNum) {
+        return StringUtils.hasText(enrollNum) ?
+                patient.patientEnrollNum.eq(enrollNum) : null;
+    }
+
+    private BooleanExpression eqPatientBirth(String birth) {
+        return StringUtils.hasText(birth) ?
+                patient.birth.eq(birth) : null;
     }
 }
