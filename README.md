@@ -1,32 +1,43 @@
 # patient-manager
 ### 에이치디정션 백엔드 개발자 채용 온라인 과제
 
->## 작업 필요 사항
->```
->1. api작성 및 restdocs 작업
->2. validation 체크 기능
->```
 
 > ## 작업 사항
 > 1. h2 databse 연동 (JPA)
 > 2. thymeleaf를 활용한 SSR 방식의 웹페이지 제작(서버 구동 이후 링크 클릭. [접속 링크](http://127.0.0.1:10001 "접속"))
 > 3. QueryDSL을 활용한 동적 검색 및 페이징 처리
 > 4. Rest API 서버 제작
-> 5. Restdocs 작성
-
-
-
+>
 > ## 개발 환경
 >```
->JAVA : openJDK 11
+>JAVA : openjdk 11
 >DB : H2 Database
->server port : 10001ㄴ
+>server port : 10001
 >```
-
+>
 > ## 프로젝트 빌드
-
+>```
+># mvnw spring-boot:run
+>* 프로젝트 구동 전에 java version 확인 및 h2 database 구동 상태 확인 필요
+>```
+>
 > ## 폴더 구조 
-
+>```
+> ---- api(rest api 연동 패키지)
+>|
+> ---- criterion(검색조건)
+>|
+> ---- domain(엔티티)
+>|
+> ---- dto(api 및 화면용 POJO)
+>|
+> ---- repository(repository)
+>|
+> ---- service(service)
+>|
+> ---- web(웹페이지 연동 패키지)
+>```
+>
 > ## 요구사항
 > ~~1. 웹 프로젝트 구성
      - [https://start.spring.io](https://start.spring.io) 에서 프로젝트를 생성해주세요.
