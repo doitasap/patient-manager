@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpSession;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -54,7 +55,7 @@ public class VisitController {
         PatientCriterion criterion = new PatientCriterion();
         criterion.setSearchHospitalId(hospitalId);
         List<PatientDto> patientList = patientService.searchAll(criterion);
-        patientList.sort((p1, p2) -> p1.getPatientName().compareTo(p2.getPatientName()));
+        patientList.sort(Comparator.comparing(PatientDto::getPatientName));
         model.addAttribute("patientList", patientList);
         model.addAttribute("visit", new VisitDto());
 

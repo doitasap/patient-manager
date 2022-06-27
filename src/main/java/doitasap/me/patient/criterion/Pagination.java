@@ -27,6 +27,7 @@ public class Pagination {
         this.rowCount = rowCount;
     }
     public int getOffset(){
+        pageNum = Math.max(pageNum, 1);
         return (pageNum - 1) * rowCount;
     }
 }

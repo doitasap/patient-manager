@@ -20,7 +20,7 @@
 <div class="d-flex flex-column py-3" style="background-color: #f8f9fa; border: 1px solid #000;">
     <form name="searchForm" action="/searchAll" th:object="${criterion}">
         <input type="hidden" name="searchHospitalId" th:value="${session.hospitalId}"/>
-        <input type="hidden" name="pageNum"/>
+        <input type="hidden" name="pageNum" th:field="*{pageNum}"/>
         <div class="float-start pl-5"><h3 class="mb-0" th:text="|검색조건|">search</h3></div>
         <div class="d-flex align-items-center mt-3">
             <div class="flex-grow-1 d-flex flex-row justify-content-between">
@@ -85,7 +85,7 @@
                 endPage = (${tempEndPage > totalPages ? totalPages : tempEndPage})"
                 aria-label="Page navigation example">
             <ul class="pagination">
-                <li th:classappend="${pageNumber + 1 <= pageSize + 1} ? 'disabled'" class="page-item">
+                <li th:classappend="${pageNumber + 1 <= pageSize} ? 'disabled'" class="page-item">
                     <a class="page-link" onclick="pageMove(1)">
                         <span>&laquo;</span>
                         <span class="sr-only">First</span>
@@ -99,7 +99,7 @@
                         </a>
                     </th:block>
                     <th:block th:unless="${list.first}">
-                        <a th:with="page = ${#numbers.formatDecimal(startPage - pageSize, 0, -1)}" class="page-link" th:onclick="pageMove([[${page}]])" aria-label="Previous">
+                        <a th:with="page = ${pageNumber}" class="page-link" th:onclick="pageMove([[${page}]])" aria-label="Previous">
                             <span aria-hidden="true">&lt;</span>
                             <span class="sr-only">Previous</span>
                         </a>
@@ -118,7 +118,7 @@
                         </a>
                     </th:block>
                     <th:block th:unless="${list.last}">
-                        <a th:with="page = ${#numbers.formatDecimal(startPage + pageSize, 0, -1)}" class="page-link" th:onclick="pageMove([[${page}]])" aria-label="Next">
+                        <a th:with="page = ${pageNumber + 2}" class="page-link" th:onclick="pageMove([[${page}]])" aria-label="Next">
                             <span aria-hidden="true">&gt;</span>
                             <span class="sr-only">Next</span>
                         </a>

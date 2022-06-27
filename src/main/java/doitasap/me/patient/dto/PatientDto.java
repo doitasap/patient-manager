@@ -1,5 +1,6 @@
 package doitasap.me.patient.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
 import doitasap.me.patient.domain.Patient;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,6 +31,7 @@ public class PatientDto {
     private String visitState;
     private Long visitId;
 
+    @QueryProjection
     public PatientDto(Patient patient) {
         this.id = patient.getPatientId();
         this.patientName = patient.getPatientName();
@@ -38,6 +40,23 @@ public class PatientDto {
         this.birth = patient.getBirth();
         this.phone = patient.getPhone();
         this.hospital = patient.getHospital().getHospitalId();
+    }
+
+    @QueryProjection
+    public PatientDto(Long id, String patientName, Long hospital, String sexualCode, String patientEnrollNum
+            ,String birth, String phone, LocalDateTime visitDate, String visitState, Long visitId){
+        this.id = id;
+        this.patientName = patientName;
+        this.patientEnrollNum =  patientEnrollNum;
+        this.sexualCode = sexualCode;
+        this.birth = birth;
+        this.phone = phone;
+        this.hospital = hospital;
+        if (Objects.nonNull(visitId)) {
+            this.visitId = visitId;
+            this.visitDate = visitDate;
+            this.visitState = visitState;
+        }
     }
 
     public PatientDto(Map<String, Object> map){
